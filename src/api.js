@@ -5,7 +5,7 @@ const baseURL = "https://newsapi.org/v2";
 
 export const getNews = async () => {
   const news = await axios.get(
-    `${baseURL}/everything?q=apple&from=2023-08-24&to=2023-08-26&sortBy=popularity&apiKey=${apiKey}`
+    `${baseURL}/everything?q=marvel&apiKey=${apiKey}`
   );
   return news.data.articles;
 };

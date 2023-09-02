@@ -1,21 +1,30 @@
 import { getNews, searchNews } from "./api";
 import { useEffect, useState } from "react";
 import { FaCalendar, FaUser } from "react-icons/fa";
+import { HeadNews, FollowingNews } from "./components/SkeletonLoad";
 
 const App = () => {
   const [appleNews, setAppleNews] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getNews().then((result) => {
       setAppleNews(result);
+      setLoading(false);
     });
-  }, []);
+  }, [2000]);
 
   const search = async (q) => {
     if (q.length > 3) {
       const querry = await searchNews(q);
-      setAppleNews(querry);
+      setLoading(true)
+
+      setTimeout(()=>{
+        setAppleNews(querry)
+        setLoading(false)
+      },2000)
     }
+    
     // console.log({querry:querry})
   };
 
@@ -56,155 +65,189 @@ const App = () => {
 
           {/* news */}
           <div className="news flex">
-            <div className="head-news">
-              <div className="head-wrap">
+            {loading ? (
+              <HeadNews />
+            ) : (
+              <div className="head-news">
+                <div className="head-wrap">
+                  <div className="news-background">
+                    <a href={appleNews[0]?.url} target="_blank">
+                      <img src={appleNews[0]?.urlToImage} alt="" />
+                    </a>
+                  </div>
+                  <div className="news-container">
+                    <div className="news-name">{appleNews[0]?.source.name}</div>
+                    <div className="news-title">{appleNews[0]?.title}</div>
+                    <div className="news-desc">{appleNews[0]?.description}</div>
+                    <div className="news-info flex">
+                      <div className="news-date">
+                        <FaCalendar />{" "}
+                        {formatDateTime(appleNews[0]?.publishedAt)}
+                      </div>
+                      <div className="news-author">
+                        <FaUser /> {appleNews[0]?.author}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="following-news flex">
+              {loading ? (
+                <FollowingNews />
+              ) : (
+                <div className="line flex">
+                  {appleNews.slice(1, 3).map((appleNews, i) => (
+                    <div className="card" key={i}>
+                      {}
+                      <div className="news-background">
+                        <a href={appleNews.url} target="_blank">
+                          <img src={appleNews.urlToImage} alt="" />
+                        </a>
+                      </div>
+                      <div className="news-container">
+                        <div className="news-name">{appleNews.source.name}</div>
+                        <div className="news-title">{appleNews.title}</div>
+                        <div className="news-desc">{appleNews.description}</div>
+                        <div className="news-info flex">
+                          <div className="news-date">
+                            <FaCalendar />{" "}
+                            {formatDateTime(appleNews.publishedAt)}
+                          </div>
+                          <div className="news-author">
+                            <FaUser /> {appleNews.author}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {loading ? (
+                <FollowingNews />
+              ) : (
+                <div className="line flex">
+                  {appleNews.slice(4, 6).map((appleNews, i) => (
+                    <div className="card" key={i}>
+                      <div className="news-background">
+                        <a href={appleNews.url} target="_blank">
+                          <img src={appleNews.urlToImage} alt="" />
+                        </a>
+                      </div>
+                      <div className="news-container">
+                        <div className="news-name">{appleNews.source.name}</div>
+                        <div className="news-title">{appleNews.title}</div>
+                        <div className="news-desc">{appleNews.description}</div>
+                        <div className="news-info flex">
+                          <div className="news-date">
+                            <FaCalendar />{" "}
+                            {formatDateTime(appleNews.publishedAt)}
+                          </div>
+                          <div className="news-author">
+                            <FaUser /> {appleNews.author}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="news flex reverse">
+            {loading ? (
+              <HeadNews />
+            ) : (
+              <div className="head-news">
                 <div className="news-background">
-                  <a href={appleNews[0]?.url} target="_blank">
-                    <img src={appleNews[0]?.urlToImage} alt="" />
+                  <a href={appleNews[12]?.url} target="_blank">
+                    <img src={appleNews[12]?.urlToImage} alt="" />
                   </a>
                 </div>
                 <div className="news-container">
-                  <div className="news-name">{appleNews[0]?.source.name}</div>
-                  <div className="news-title">{appleNews[0]?.title}</div>
-                  <div className="news-desc">{appleNews[0]?.description}</div>
+                  <div className="news-name">{appleNews[12]?.source.name}</div>
+                  <div className="news-title">{appleNews[12]?.title}</div>
+                  <div className="news-desc">{appleNews[12]?.description}</div>
                   <div className="news-info flex">
                     <div className="news-date">
-                      <FaCalendar /> {formatDateTime(appleNews[0]?.publishedAt)}
+                      <FaCalendar />{" "}
+                      {formatDateTime(appleNews[12]?.publishedAt)}
                     </div>
                     <div className="news-author">
-                      <FaUser /> {appleNews[0]?.author}
+                      <FaUser /> {appleNews[12]?.author}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
+
             <div className="following-news flex">
-              <div className="line flex">
-                {appleNews.slice(1, 3).map((appleNews, i) => (
-                  <div className="card" key={i}>
-                    <div className="news-background">
-                      <a href={appleNews.url} target="_blank">
-                        <img src={appleNews.urlToImage} alt="" />
-                      </a>
-                    </div>
-                    <div className="news-container">
-                      <div className="news-name">{appleNews.source.name}</div>
-                      <div className="news-title">{appleNews.title}</div>
-                      <div className="news-desc">{appleNews.description}</div>
-                      <div className="news-info flex">
-                        <div className="news-date">
-                          <FaCalendar /> {formatDateTime(appleNews.publishedAt)}
-                        </div>
-                        <div className="news-author">
-                          <FaUser /> {appleNews.author}
+              {loading ? (
+                <FollowingNews />
+              ) : (
+                <div className="line flex">
+                  {appleNews.slice(7, 9).map((appleNews, i) => (
+                    <div className="card" key={i}>
+                      <div className="news-background">
+                        <a href={appleNews.url} target="_blank">
+                          <img src={appleNews.urlToImage} alt="" />
+                        </a>
+                      </div>
+                      <div className="news-container">
+                        <div className="news-name">{appleNews.source.name}</div>
+                        <div className="news-title">{appleNews.title}</div>
+                        <div className="news-desc">{appleNews.description}</div>
+                        <div className="news-info flex">
+                          <div className="news-date">
+                            <FaCalendar />{" "}
+                            {formatDateTime(appleNews.publishedAt)}
+                          </div>
+                          <div className="news-author">
+                            <FaUser /> {appleNews.author}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-              <div className="line flex">
-                {appleNews.slice(4, 6).map((appleNews, i) => (
-                  <div className="card" key={i}>
-                    <div className="news-background">
-                      <a href={appleNews.url} target="_blank">
-                        <img src={appleNews.urlToImage} alt="" />
-                      </a>
-                    </div>
-                    <div className="news-container">
-                      <div className="news-name">{appleNews.source.name}</div>
-                      <div className="news-title">{appleNews.title}</div>
-                      <div className="news-desc">{appleNews.description}</div>
-                      <div className="news-info flex">
-                        <div className="news-date">
-                          <FaCalendar /> {formatDateTime(appleNews.publishedAt)}
-                        </div>
-                        <div className="news-author">
-                          <FaUser /> {appleNews.author}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="news flex reverse">
-            <div className="head-news">
-              <div className="news-background">
-                <a href={appleNews[12]?.url} target="_blank">
-                  <img src={appleNews[12]?.urlToImage} alt="" />
-                </a>
-              </div>
-              <div className="news-container">
-                <div className="news-name">{appleNews[12]?.source.name}</div>
-                <div className="news-title">{appleNews[12]?.title}</div>
-                <div className="news-desc">{appleNews[12]?.description}</div>
-                <div className="news-info flex">
-                  <div className="news-date">
-                    <FaCalendar /> {formatDateTime(appleNews[12]?.publishedAt)}
-                  </div>
-                  <div className="news-author">
-                    <FaUser /> {appleNews[12]?.author}
-                  </div>
+                  ))}
                 </div>
-              </div>
-            </div>
-            <div className="following-news flex">
-              <div className="line flex">
-                {appleNews.slice(7, 9).map((appleNews, i) => (
-                  <div className="card" key={i}>
-                    <div className="news-background">
-                      <a href={appleNews.url} target="_blank">
-                        <img src={appleNews.urlToImage} alt="" />
-                      </a>
-                    </div>
-                    <div className="news-container">
-                      <div className="news-name">{appleNews.source.name}</div>
-                      <div className="news-title">{appleNews.title}</div>
-                      <div className="news-desc">{appleNews.description}</div>
-                      <div className="news-info flex">
-                        <div className="news-date">
-                          <FaCalendar /> {formatDateTime(appleNews.publishedAt)}
-                        </div>
-                        <div className="news-author">
-                          <FaUser /> {appleNews.author}
+              )}
+              {loading ? (
+                <FollowingNews />
+              ) : (
+                <div className="line flex">
+                  {appleNews.slice(10, 12).map((appleNews, i) => (
+                    <div className="card" key={i}>
+                      <div className="news-background">
+                        <a href={appleNews.url} target="_blank">
+                          <img src={appleNews.urlToImage} alt="" />
+                        </a>
+                      </div>
+                      <div className="news-container">
+                        <div className="news-name">{appleNews.source.name}</div>
+                        <div className="news-title">{appleNews.title}</div>
+                        <div className="news-desc">{appleNews.description}</div>
+                        <div className="news-info flex">
+                          <div className="news-date">
+                            <FaCalendar />{" "}
+                            {formatDateTime(appleNews.publishedAt)}
+                          </div>
+                          <div className="news-author">
+                            <FaUser /> {appleNews.author}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-              <div className="line flex">
-                {appleNews.slice(10, 12).map((appleNews, i) => (
-                  <div className="card" key={i}>
-                    <div className="news-background">
-                      <a href={appleNews.url} target="_blank">
-                        <img src={appleNews.urlToImage} alt="" />
-                      </a>
-                    </div>
-                    <div className="news-container">
-                      <div className="news-name">{appleNews.source.name}</div>
-                      <div className="news-title">{appleNews.title}</div>
-                      <div className="news-desc">{appleNews.description}</div>
-                      <div className="news-info flex">
-                        <div className="news-date">
-                          <FaCalendar /> {formatDateTime(appleNews.publishedAt)}
-                        </div>
-                        <div className="news-author">
-                          <FaUser /> {appleNews.author}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
           {/* recent */}
           <h3 className="flex">History</h3>
-          <div className="recent-news flex">
+          {/* <div className="recent-news flex">
             <div className="card">
               <div className="news-background">
                 <a href={appleNews[12]?.url} target="_blank">
@@ -245,8 +288,7 @@ const App = () => {
                 <div className="news-title">{appleNews[12]?.title}</div>
               </div>
             </div>
-           
-          </div>
+          </div> */}
         </div>
       </div>
     </>
